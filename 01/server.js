@@ -1,5 +1,6 @@
 // Build A Small HTTP Server
 const http = require('http');
+const { stringify } = require('querystring');
 
 // dummy Database
 let customers = [
@@ -21,6 +22,26 @@ const server = http.createServer((req,res)=>{
         return;
     }
 
+    // GET SPECIFIC CUSTOMER
+    if(req.method=="GET" && req.url.startsWith("/customers/")){
+        const id = req.url.split("/")[2];
+        const customer = customers.find(c=>c.id === id);
+        console.log(id);
+
+        // if customer not found in the Database
+        if(!customer){
+            res.writeHead(404);
+            res.end(JSON, stringify({
+                error : "Customer Not Found"
+            }));
+            return;
+        }
+
+        res.writeHead(200);
+        res.end(JSON.stringify(customer));
+        return;
+    }
+
     // POST NEW CUSTOMER
     if (req.method=="POST" && req.url == "/customers"){
         let body = ""
@@ -32,6 +53,7 @@ const server = http.createServer((req,res)=>{
             console.log(typeof body)
         });
 
+        // req.on("methodname", ()=>{})
         req.on("end", ()=>{
             console.log("FINAL BODY");
             console.log(body);
