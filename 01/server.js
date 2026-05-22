@@ -1,6 +1,5 @@
 // Build A Small HTTP Server
 const http = require('http');
-const { stringify } = require('querystring');
 
 // dummy Database
 let customers = [
@@ -22,8 +21,9 @@ const server = http.createServer((req,res)=>{
         return;
     }
 
-    // GET SPECIFIC CUSTOMER
+    // GET SPECIFIC SINGLE CUSTOMER
     if(req.method=="GET" && req.url.startsWith("/customers/")){
+        console.log(req.url)
         const id = req.url.split("/")[2];
         const customer = customers.find(c=>c.id === id);
         console.log(id);
@@ -31,7 +31,7 @@ const server = http.createServer((req,res)=>{
         // if customer not found in the Database
         if(!customer){
             res.writeHead(404);
-            res.end(JSON, stringify({
+            res.end(JSON.stringify({
                 error : "Customer Not Found"
             }));
             return;
@@ -39,7 +39,7 @@ const server = http.createServer((req,res)=>{
 
         res.writeHead(200);
         res.end(JSON.stringify(customer));
-        return;
+        return; 
     }
 
     // POST NEW CUSTOMER
@@ -76,6 +76,38 @@ const server = http.createServer((req,res)=>{
             }));
 
         });
+        return;
+    }
+
+    // PUT Method
+    if(req.method == "PUT" && req.url.startsWith("/customers/")){
+        const id = req.url.split("/")[2]
+        let body = ""
+
+        req.on("data", chunk=>{
+            body+= chunk.toString();
+        });
+
+        req.on("end", ()=>{
+            const updatedCustomer = JSON.parse(body);
+            const index = customers.findIndex(c=>c.id == id);
+            
+            if(index===-1){
+                res.writeHead(404);
+                res.end(JSON.stringify({
+                    error : "Customer Not Found"
+                }));
+                return;
+            }
+            
+            customers[index] = updatedCustomer;
+            res.writeHead(200);
+
+            res.end(JSON.stringify({
+                message : "Customer Replaced",
+                data : updatedCustomer
+            }))
+        })
         return;
     }
 
