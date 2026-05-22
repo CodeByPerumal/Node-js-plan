@@ -10,6 +10,8 @@ const client = new DynamoDBClient({
   region : "us-east-1"
 });
 
+const crypto = require("crypto");
+
 const dynamoDB = DynamoDBDocumentClient.from(client);
 
 const TABLE_NAME = "Customers";
@@ -18,7 +20,7 @@ const TABLE_NAME = "Customers";
 module.exports.getCustomers = async()=>{
     try{
       const command = new ScanCommand({
-        TableName = TABLE_NAME
+        TableName: TABLE_NAME
       })
 
       const response = await dynamoDB.send(command)
@@ -32,7 +34,7 @@ module.exports.getCustomers = async()=>{
       return {
         statusCode : 500,
         body : JSON.stringify({
-          error: error.message
+          error: err.message
         })
       }
     }
@@ -46,9 +48,10 @@ module.exports.createCustomer = async(event)=>{
 
       // NEW OBJECT
       const customer = {
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         fullName : body.fullName,
-        city : body.city
+        city : body.city,
+        address: body.address
       };
 
       // PUT COMMAND
