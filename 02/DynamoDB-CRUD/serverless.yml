@@ -11,11 +11,66 @@ provider:
   # Uncomment to easily set up a custom domain. Read the docs for more details:
   # https://www.serverless.com/framework/docs/providers/aws/guide/domains
   # domain: api.example.com
+  region : us-east-1
 
+  iam:
+    role:
+      statements:
+        - Effect : Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:us-east-1:*:table/Customers
+
+# Functions
 functions:
-  hello:
+  health:
     handler: handler.health
     events:
       - httpApi:
           path: /
           method: get
+  
+  # GET
+  getCustomers:
+    handler: handler.getCustomers
+    events:
+      - httpApi:
+          path: /customers
+          method: get
+  
+  # POST
+  createCustomer:
+    handler: handler.createCustomer
+    events:
+      - httpApi:
+          path : /customers
+          method : post 
+
+  # # GET SPECIFIC
+  # getCustomerById:
+  #   handler: handler.getCustomerById
+  #   events:
+  #     - httpApi:
+  #         path: /customers/{id}
+  #         method: get
+  
+  # # UPDATE SPECIFIC
+  # updateCustomer:
+  #   handler: handler.updateCustomer
+  #   events:
+  #     - httpApi:
+  #         path: /customers/{id}
+  #         method: put
+
+  # # DELETE SPECIFIC
+  # deleteCustomer:
+  #   handler: handler.deleteCustomer
+  #   events:
+  #     - httpApi:
+  #         path: /customers/{id}
+  #         method: delete
