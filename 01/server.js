@@ -111,6 +111,38 @@ const server = http.createServer((req,res)=>{
         return;
     }
 
+    if(req.method == "PATCH" && req.url.startsWith("/customers/")){
+        const id = req.url.split("/")[2];
+        let body = ""
+
+        req.on("data", chunk=>{
+            body += chunk.toString()
+            console.log(chunk)
+            console.log(body)
+        })
+
+        req.on("end", ()=>{
+            const updates = JSON.parse(body);
+            const customer = customers.find(c=>c.id == id)
+            console.log(customer)
+
+            if(!customer){
+                res.writeHead(404);
+                res.end(JSON.stringify({
+                    error : "Customer Not Found"
+                }));
+                return;
+            }
+            Object.assign(customer, updates);
+            res.writeHead(200);
+            res.end(JSON.stringify({
+                message : "Customer Updated",
+                data : customer
+            }))
+        })
+        return;
+    }
+
     res.writeHead(404);
     res.end(JSON.stringify({error: "File Not Found"}))
 })
