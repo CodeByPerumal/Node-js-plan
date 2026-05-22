@@ -143,6 +143,30 @@ const server = http.createServer((req,res)=>{
         return;
     }
 
+    if(req.method == "DELETE" && req.url.startsWith("/customers/")){
+        const id = req.urls.split("/")[2];
+        console.log(id)
+        const index = customers.findIndex(c=>c.id == id);
+        console.log(index)
+
+        if(index==-1){
+            res.writeHead(404);
+            res.end(JSON.stringify({
+                error : "File Not Found"
+            }))
+            return;
+        }
+    
+        const deletedCustomer = customers.splice(index, 1)
+        res.writeHead(200);
+        res.end(JSON.stringify({
+            message : "Customer Deleted",
+            data : deletedCustomer
+        }))
+        return;
+        
+    }
+
     res.writeHead(404);
     res.end(JSON.stringify({error: "File Not Found"}))
 })
