@@ -1,2 +1,2 @@
-./02/node_modules/*
+02/node_modules/
 .env
