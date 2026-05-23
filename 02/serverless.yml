@@ -1,0 +1,58 @@
+org: krish007
+
+service: backend
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-1
+
+  iam:
+    role:
+      statements:
+      - Effect: Allow
+        Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
+        Resource:
+        - arn:aws:dynamodb:us-east-1:567185414759:table/tasks
+
+functions:
+
+  createUser:
+    handler: DynamoDB.createUser
+    events:
+    - httpApi:
+        path: /createUser
+        method: post
+
+  getUsers:
+    handler: DynamoDB.getUsers
+    events:
+    - httpApi:
+        path: /users
+        method: get
+
+  updateUser:
+    handler: DynamoDB.updateUser
+    events:
+    - httpApi:
+        path: /updateUser
+        method: put
+
+  getUserById:
+    handler: DynamoDB.getUserById
+    events:
+    - httpApi:
+        path: /user/{id}
+        method: get
+
+  deleteById:
+    handler: DynamoDB.deleteById
+    events:
+    - httpApi:
+        path: /user/{id}
+        method: delete
