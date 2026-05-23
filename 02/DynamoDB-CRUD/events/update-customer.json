@@ -1,0 +1,6 @@
+{
+  "pathParameters": {
+    "id": "REPLACE_WITH_CUSTOMER_ID"
+  },
+  "body": "{\"fullName\":\"Updated User\",\"city\":\"Chennai\",\"address\":\"Updated Street\"}"
+}

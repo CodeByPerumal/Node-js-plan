@@ -7,11 +7,19 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "offline": "cd DynamoDB-CRUD && serverless offline start --httpPort 3000 --lambdaPort 3002 --noTimeout",
+    "debug:offline": "cd DynamoDB-CRUD && node --inspect=9229 ../node_modules/serverless/run.js offline start --httpPort 3000 --lambdaPort 3002 --noTimeout",
+    "invoke:health": "cd DynamoDB-CRUD && serverless invoke local --function health",
+    "invoke:create": "cd DynamoDB-CRUD && serverless invoke local --function createCustomer --path events/create-customer.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1052.0",
     "@aws-sdk/lib-dynamodb": "^3.1052.0",
     "uuid": "^14.0.0"
+  },
+  "devDependencies": {
+    "serverless": "^4.36.1",
+    "serverless-offline": "^14.7.0"
   }
 }

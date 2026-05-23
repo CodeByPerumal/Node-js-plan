@@ -19,13 +19,16 @@ provider:
         - Effect : Allow
           Action:
             - dynamodb:Scan
-            # - dynamodb:GetItem
+            - dynamodb:GetItem
             - dynamodb:PutItem
-            # - dynamodb:UpdateItem
-            # - dynamodb:DeleteItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
           Resource:
             - arn:aws:dynamodb:us-east-1:*:table/Customers
 
+plugins:
+  - serverless-offline
+  
 # Functions
 functions:
   health:
@@ -51,29 +54,37 @@ functions:
           path : /customers
           method : post 
 
-  # # GET SPECIFIC
-  # getCustomerById:
-  #   handler: handler.getCustomerById
-  #   events:
-  #     - httpApi:
-  #         path: /customers/{id}
-  #         method: get
+  # GET SPECIFIC
+  getCustomerById:
+    handler: handler.getCustomerById
+    events:
+      - httpApi:
+          path: /customers/{id}
+          method: get
   
-  # # UPDATE SPECIFIC
-  # updateCustomer:
-  #   handler: handler.updateCustomer
-  #   events:
-  #     - httpApi:
-  #         path: /customers/{id}
-  #         method: put
+  # UPDATE SPECIFIC
+  updateCustomer:
+    handler: handler.updateCustomer
+    events:
+      - httpApi:
+          path: /customers/{id}
+          method: put
 
-  # # DELETE SPECIFIC
-  # deleteCustomer:
-  #   handler: handler.deleteCustomer
-  #   events:
-  #     - httpApi:
-  #         path: /customers/{id}
-  #         method: delete
+  # PARTIAL UPDATE SPECIFIC
+  patchCustomer:
+    handler: handler.patchCustomer
+    events:
+      - httpApi:
+          path: /customers/{id}
+          method: patch
+
+  # DELETE SPECIFIC
+  deleteCustomer:
+    handler: handler.deleteCustomer
+    events:
+      - httpApi:
+          path: /customers/{id}
+          method: delete
 
 resources:
   Resources:

@@ -1,0 +1,60 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Serverless Offline",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/DynamoDB-CRUD",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--inspect=9229",
+        "${workspaceFolder}/node_modules/serverless/run.js"
+      ],
+      "args": [
+        "offline",
+        "start",
+        "--httpPort",
+        "3000",
+        "--lambdaPort",
+        "3002",
+        "--noTimeout"
+      ],
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "justMyCode": true,
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+        "${workspaceFolder}/DynamoDB-CRUD/node_modules/**"
+      ]
+    },
+    {
+      "name": "Debug createCustomer Invoke",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/DynamoDB-CRUD",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--inspect-brk=9229",
+        "${workspaceFolder}/node_modules/serverless/run.js"
+      ],
+      "args": [
+        "invoke",
+        "local",
+        "--function",
+        "createCustomer",
+        "--path",
+        "events/create-customer.json"
+      ],
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "justMyCode": true,
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+        "${workspaceFolder}/DynamoDB-CRUD/node_modules/**"
+      ]
+    }
+  ]
+}
